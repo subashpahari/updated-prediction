@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appendicitis Predictor</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #1e1e2f, #3a3a5e);
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .container {
+        max-width: 700px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: 0.3s;
+      }
+      .card:hover {
+        box-shadow: 0 10px 50px rgba(255, 255, 255, 0.2);
+      }
+      h1 {
+        text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.3);
+        text-align: center;
+      }
+      .form-control {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: #fff;
+        border-radius: 12px;
+        padding: 14px;
+        transition: 0.3s;
+      }
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+      .btn-primary {
+        background: linear-gradient(45deg, #ff6f61, #ffb74d);
+        border: none;
+        padding: 14px 25px;
+        font-size: 18px;
+        border-radius: 30px;
+        transition: 0.3s;
+        display: block;
+        width: 100%;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(45deg, #ff3d3d, #ff9800);
+        transform: scale(1.05);
+      }
+      .alert-info {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 15px;
+        padding: 15px;
+      }
+      .icon {
+        margin-right: 10px;
+        color: #ffb74d;
+      }
+      .form-control {
+        padding: 10px;
+      }
+      .prediction-box {
+        background: linear-gradient(45deg, #ff6f61, #ffb74d);
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 0 15px rgba(255, 183, 77, 0.8);
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+        max-width: 400px;
+        margin: 20px auto;
+      }
+
+      .prediction-box:hover {
+        transform: scale(1.05);
+      }
+
+      .button-group {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <h1 class="text-center mb-4">
+        <i class="fa-solid fa-stethoscope"></i> Appendicitis Predictor
+      </h1>
+      <div class="card">
+        <div id="report-container">
+          <form action="/predict" method="post">
+            <!-- Appendix Diameter -->
+            <div class="form-group">
+              <label for="AppendixDiameter"
+                ><i class="fa-solid fa-ruler-combined icon"></i> Appendix
+                Diameter (mm):</label
+              >
+              <input
+                id="Diameter"
+                type="number"
+                name="AppendixDiameter"
+                class="form-control"
+                step="0.1"
+                placeholder="e.g., 6"
+                required
+              />
+            </div>
+
+            <!-- Rebound Tenderness -->
+            <div class="form-group">
+              <label for="ReboundTenderness"
+                ><i class="fa-solid fa-hands icon"></i> Rebound
+                Tenderness:</label
+              >
+              <select
+                id="ReboundTenderness"
+                name="ReboundTenderness"
+                class="form-control"
+                required
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <!-- Coughing Pain -->
+            <div class="form-group">
+              <label for="CoughingPain"
+                ><i class="fa-solid fa-lungs icon"></i> Coughing Pain:</label
+              >
+              <select
+                id="CoughingPain"
+                name="CoughingPain"
+                class="form-control"
+                required
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <!-- Free Fluids -->
+            <div class="form-group">
+              <label for="FreeFluids"
+                ><i class="fa-solid fa-water icon"></i> Free Fluids:</label
+              >
+              <select
+                id="FreeFluids"
+                name="FreeFluids"
+                class="form-control"
+                required
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <!-- Migratory Pain -->
+            <div class="form-group">
+              <label for="MigratoryPain"
+                ><i class="fa-solid fa-bolt icon"></i> Migratory Pain:</label
+              >
+              <select
+                id="MigratoryPain"
+                name="MigratoryPain"
+                class="form-control"
+                required
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <!-- Body Temperature -->
+            <div class="form-group">
+              <label for="BodyTemp"
+                ><i class="fa-solid fa-temperature-high icon"></i> Body
+                Temperature (°C):</label
+              >
+              <input
+                id="BodyTemp"
+                type="number"
+                name="BodyTemp"
+                class="form-control"
+                step="0.1"
+                placeholder="e.g., 37.0"
+                required
+              />
+            </div>
+
+            <!-- Ketones In Urine -->
+            <div class="form-group">
+              <label for="KetonesInUrine"
+                ><i class="fa-solid fa-flask icon"></i> Ketones In Urine:</label
+              >
+              <select
+                id="KetonesInUrine"
+                name="KetonesInUrine"
+                class="form-control"
+                required
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <!-- Nausea -->
+            <div class="form-group">
+              <label for="Nausea"
+                ><i class="fa-solid fa-head-side-virus icon"></i> Nausea:</label
+              >
+              <select id="Nausea" name="Nausea" class="form-control" required>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <!-- WBC Count -->
+            <div class="form-group">
+              <label for="WBCCount"
+                ><i class="fa-solid fa-tint icon"></i> WBC Count
+                (cells/µL):</label
+              >
+              <input
+                id="WBCCount"
+                type="number"
+                name="WBCCount"
+                class="form-control"
+                step="1"
+                placeholder="e.g., 8000"
+                required
+              />
+            </div>
+
+            <!-- Neutrophil Percentage -->
+            <div class="form-group">
+              <label for="NeutrophilPerc"
+                ><i class="fa-solid fa-percentage icon"></i> Neutrophil
+                Percentage (%):</label
+              >
+              <input
+                id="NeutrophilPerc"
+                type="number"
+                name="NeutrophilPerc"
+                class="form-control"
+                step="0.1"
+                min="0"
+                max="100"
+                placeholder="e.g., 75.0"
+                required
+              />
+            </div>
+
+            <!-- CRP Entry -->
+            <div class="form-group">
+              <label for="CRPEntry"
+                ><i class="fa-solid fa-microscope icon"></i> CRP Entry (mg/L):</label
+              >
+              <input
+                id="CRPEntry"
+                type="number"
+                name="CRPEntry"
+                class="form-control"
+                step="0.1"
+                placeholder="e.g., 5.0"
+                required
+              />
+            </div>
+
+            <!-- Peritonitis -->
+            <div class="form-group">
+              <label for="Peritonitis"
+                ><i class="fa-solid fa-exclamation-triangle icon"></i>
+                Peritonitis:</label
+              >
+              <select
+                id="Peritonitis"
+                name="Peritonitis"
+                class="form-control"
+                required
+              >
+                <option value="0">No</option>
+                <option value="1">Localized</option>
+                <option value="2">Generalized</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+              <input
+                type="submit"
+                value="Predict"
+                class="btn btn-primary btn-lg"
+              />
+            </div>
+          </form>
+          {% if prediction_text %}
+          <div id="prediction-container" class="prediction-box text-center">
+            <h2 id="prediction-text">{{ prediction_text }}</h2>
+            <h2 id="prediction-text">{{ confidence_text }}</h2>
+            <div class="button-group">
+              <button id="download-btn" class="btn btn-success">
+                <i class="fa-solid fa-download"></i> Download
+              </button>
+              <button id="cancel-btn" class="btn btn-danger">
+                <i class="fa-solid fa-times"></i> Cancel
+              </button>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Add this script in the head or before closing body tag -->
+    <!-- Include html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("download-btn")
+          .addEventListener("click", function () {
+            // Create a new container for the report
+            let reportDiv = document.createElement("div");
+            reportDiv.style.width = "600px";
+            reportDiv.style.padding = "20px";
+            reportDiv.style.background = "#fff";
+            reportDiv.style.color = "#000";
+            reportDiv.style.border = "2px solid #333";
+            reportDiv.style.fontFamily = "Arial, sans-serif";
+            reportDiv.style.textAlign = "left";
+
+            // Add title
+            let title = document.createElement("h2");
+            title.innerText = "Appendicitis Prediction Report";
+            title.style.textAlign = "center";
+            reportDiv.appendChild(title);
+
+            // Get all form inputs
+            let inputs = document.querySelectorAll(
+              "#prediction-form select, #prediction-form input"
+            );
+            inputs.forEach((input) => {
+              let label = document.querySelector(`label[for=${input.id}]`);
+              let labelText = label ? label.innerText : input.name; // Handle missing labels
+              let value =
+                input.tagName === "SELECT"
+                  ? input.options[input.selectedIndex].text
+                  : input.value;
+
+              let p = document.createElement("p");
+              p.innerHTML = `<strong>${labelText}:</strong> ${value || "N/A"}`;
+              reportDiv.appendChild(p);
+            });
+
+            // Add prediction result
+            let predictionText = document.getElementById("prediction-text");
+            if (predictionText) {
+              let result = document.createElement("h3");
+              result.innerText = `Diagnosis: ${predictionText.innerText}`;
+              result.style.color = "red";
+              result.style.textAlign = "center";
+              reportDiv.appendChild(result);
+            }
+
+            // Append the report to the body (temporarily)
+            document.body.appendChild(reportDiv);
+
+            // Convert to PNG using html2canvas
+            html2canvas(reportDiv).then((canvas) => {
+              let link = document.createElement("a");
+              link.href = canvas.toDataURL("image/png");
+              link.download = "Appendicitis_Prediction_Report.png";
+              link.click();
+
+              // Remove the temporary report
+              document.body.removeChild(reportDiv);
+            });
+          });
+        // Handle Cancel Button Click
+        document
+          .getElementById("cancel-btn")
+          ?.addEventListener("click", function () {
+            document.getElementById("prediction-container").style.display =
+              "none";
+          });
+      });
+    </script>
+  </body>
+</html>
