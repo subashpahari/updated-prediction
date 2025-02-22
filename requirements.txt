@@ -26,6 +26,7 @@ google-pasta==0.2.0
 gower==0.1.2
 greenlet==3.1.1
 grpcio==1.66.2
+gunicorn==23.0.0
 h5py==3.12.1
 idna==3.10
 ipykernel==6.29.5
@@ -69,6 +70,7 @@ Pygments==2.18.0
 pyparsing==3.1.4
 python-dateutil==2.9.0.post0
 pytz==2024.2
+pywin32==307
 PyYAML==6.0.2
 pyzmq==26.2.0
 requests==2.32.3
